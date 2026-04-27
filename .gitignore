@@ -1,0 +1,19 @@
+# Python/cache
+__pycache__/
+*.pyc
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Temp and large intermediates
+tmp/
+*.tmp
+*.log
+*.abf
+*.pbix
+*.twbx
