@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PIL import Image
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.util import Inches, Pt
@@ -54,104 +53,24 @@ def delete_pictures(slide) -> None:
             shape._element.getparent().remove(shape._element)
 
 
-def add_picture_fit(slide, image_path: Path, left: int, top: int, width: int, height: int) -> None:
-    with Image.open(image_path) as image:
-        image_width, image_height = image.size
-
-    image_ratio = image_width / image_height
-    box_ratio = width / height
-    if image_ratio >= box_ratio:
-        fitted_width = width
-        fitted_height = round(width / image_ratio)
-    else:
-        fitted_height = height
-        fitted_width = round(height * image_ratio)
-
-    fitted_left = left + round((width - fitted_width) / 2)
-    fitted_top = top + round((height - fitted_height) / 2)
-    slide.shapes.add_picture(
-        str(image_path),
-        fitted_left,
-        fitted_top,
-        width=fitted_width,
-        height=fitted_height,
-    )
-
-
 def add_chart(slide, image_path: Path, prs: Presentation, full: bool = False) -> None:
     if full:
-        add_picture_fit(
-            slide,
-            image_path,
-            left=Inches(0.35),
-            top=Inches(0.8),
-            width=prs.slide_width - Inches(0.7),
-            height=prs.slide_height - Inches(1.05),
-        )
+        slide.shapes.add_picture(str(image_path), Inches(0.3), Inches(0.7), width=prs.slide_width - Inches(0.6))
         return
-    add_picture_fit(
-        slide,
-        image_path,
-        left=Inches(0.55),
-        top=Inches(1.05),
-        width=prs.slide_width - Inches(1.1),
-        height=prs.slide_height - Inches(1.35),
-    )
+    slide.shapes.add_picture(str(image_path), Inches(0.75), Inches(1.35), width=Inches(11.85))
 
 
-def remove_shape(shape) -> None:
-    shape._element.getparent().remove(shape._element)
-
-
-def add_or_update_title(slide, text: str, prs: Presentation) -> None:
+def add_or_update_title(slide, text: str) -> None:
     title = slide.shapes.title
     if title is not None:
         title.text = text
-        title.left = Inches(0.55)
-        title.top = Inches(0.25)
-        title.width = prs.slide_width - Inches(1.1)
-        title.height = Inches(0.55)
         return
-
-    candidates = [
-        shape
-        for shape in list(slide.shapes)
-        if getattr(shape, "has_text_frame", False)
-        and ("CEI disadvantaged tracts" in shape.text or "priority corridors" in shape.text.lower())
-    ]
-    if candidates:
-        box = candidates[0]
-        for duplicate in candidates[1:]:
-            remove_shape(duplicate)
-        box.left = Inches(0.55)
-        box.top = Inches(0.25)
-        box.width = prs.slide_width - Inches(1.1)
-        box.height = Inches(0.55)
-    else:
-        box = slide.shapes.add_textbox(Inches(0.55), Inches(0.25), prs.slide_width - Inches(1.1), Inches(0.55))
-
+    box = slide.shapes.add_textbox(Inches(0.55), Inches(0.25), Inches(12.1), Inches(0.55))
     box.text_frame.text = text
     for paragraph in box.text_frame.paragraphs:
         for run in paragraph.runs:
             run.font.size = Pt(24)
             run.font.bold = True
-
-
-def clamp_shapes_to_slide(prs: Presentation) -> None:
-    for slide in prs.slides:
-        for shape in slide.shapes:
-            if shape.width > prs.slide_width:
-                shape.width = prs.slide_width
-            if shape.height > prs.slide_height:
-                shape.height = prs.slide_height
-            if shape.left < 0:
-                shape.left = 0
-            if shape.top < 0:
-                shape.top = 0
-            if shape.left + shape.width > prs.slide_width:
-                shape.left = max(0, prs.slide_width - shape.width)
-            if shape.top + shape.height > prs.slide_height:
-                shape.top = max(0, prs.slide_height - shape.height)
 
 
 def update_images(prs: Presentation) -> None:
@@ -161,7 +80,7 @@ def update_images(prs: Presentation) -> None:
         image_path = ROOT / rel_path
         add_chart(slide, image_path, prs, full=slide_number in {15, 24})
 
-    add_or_update_title(prs.slides[23], "CEI disadvantaged tracts and priority corridors", prs)
+    add_or_update_title(prs.slides[23], "CEI disadvantaged tracts and priority corridors")
 
 
 def update_key_slide_text(prs: Presentation) -> None:
@@ -209,7 +128,6 @@ def main() -> None:
     replace_text(prs)
     update_key_slide_text(prs)
     update_images(prs)
-    clamp_shapes_to_slide(prs)
     prs.save(DECK_PATH)
     print(f"Updated {DECK_PATH}")
 
