@@ -1,1 +1,1 @@
-https://data-maryland.opendata.arcgis.com/datasets/mdot-sha-annual-average-daily-traffic-aadt-locations/explore?location=37.345034%2C-77.732103%2C6.51
+https://opendata.maryland.gov/Transportation/Annual-Average-Daily-Traffic-Volume/2997-4217

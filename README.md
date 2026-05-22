@@ -1,43 +1,51 @@
 # Montgomery Crash Safety Capstone
 
-Data analysis capstone focused on identifying high-risk crash corridors in Montgomery County and prioritizing systemic safety interventions.
+Portfolio analysis identifying high-risk crash corridors in Montgomery County and ranking safety investments with crash severity, exposure, vulnerable road user risk, and the Community Equity Index (CEI).
 
-## Project Goal
-Translate road safety data into an actionable prioritization framework that supports evidence-based decisions for severe crash reduction.
-
-## Problem Statement
-Montgomery County Vision Zero efforts require targeted interventions, but crash risk is unevenly distributed across the network. This project identifies where severe crash burden is concentrated and ranks corridors for action.
+## Results
+- Analysis window: **2020-2024**
+- Crashes reviewed: **59,476**
+- KSI crashes: **1,400**
+- Fatal crashes: **244**
+- VRU KSI crashes: **455**
+- Estimated societal cost: **$7.1B**
+- Core HIN: **8.7%** of roadway miles accounts for roughly 50% of KSI crashes.
 
 ## Methodology
-- Integrated crash-related datasets (incidents, drivers, non-motorists) with exposure/context features.
-- Standardized and cleaned keys used for joining and geographic analysis.
-- Built a **High Injury Network (HIN)** view to detect concentrated KSI (killed/seriously injured) patterns.
-- Applied exposure-aware logic to avoid over-prioritizing high-volume roads only.
-- Produced corridor-level outputs and decision-ready presentation materials.
+- Cleaned and joined incidents, drivers, and non-motorist crash records at crash level.
+- Matched crash points to TIGER/Line road segments and MDOT SHA AADT observations.
+- Built a High Injury Network (HIN) from KSI concentration.
+- Computed exposure-adjusted KSI rates using vehicle miles traveled.
+- Added CEI disadvantaged tract counts and vulnerable road user KSI counts to the priority score.
+- Removed exact duplicate road geometries so route aliases are not double-counted in top corridor rankings.
 
-## KPI Logic
-- **KSI Concentration KPI:** share of severe crashes concentrated in a small share of segments.
-- **Exposure-Adjusted Risk KPI:** severe crash burden normalized by traffic exposure where applicable.
-- **Priority Score KPI:** weighted corridor prioritization combining crash burden, vulnerable user risk, and equity-informed context.
-
-## Key Recommendations
-- Prioritize interventions on top-ranked HIN corridors.
-- Expand systemic treatments (visibility, speed management, intersection safety design).
-- Use periodic data refreshes to monitor corridor rank movement and intervention effectiveness.
-
-## Repository Structure
-- `data/`: curated geojson outputs + sampled crash datasets.
-- `assets/`: project visuals.
-- `deliverables/`: final presentation.
-- `docs/`: source notes and references.
-- `notebooks_or_analysis/`: analysis and reproducibility notes.
+## Priority Score
+The final score combines normalized:
+- KSI crash burden
+- VRU KSI burden
+- Exposure-adjusted KSI rate
+- KSI crashes in CEI disadvantaged tracts
 
 ## How To Review
-1. Start with `deliverables/montgomery_crash_safety_presentation.pptx` for project narrative.
-2. Review `data/segments_priority.geojson` and `data/segments_hin.geojson` for output artifacts.
-3. Read `docs/data_sources_and_reproduction.md` for full-data sourcing and rebuild guidance.
+1. Open `notebooks_or_analysis/Notebook.ipynb` for the polished analysis report.
+2. Open `deliverables/montgomery_crash_safety_presentation.pptx` for the presentation narrative.
+3. Review `data/segments_priority.geojson`, `data/segments_hin.geojson`, and `data/segments_exposure.geojson` for geospatial outputs.
+4. Read `docs/data_sources_and_reproduction.md` to rebuild the analysis locally.
+
+## Rebuild
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Place the large raw crash CSVs in `data/raw/` or set `MONTGOMERY_RAW_DATA_DIR`, then run:
+
+```bash
+python scripts/build_analysis_assets.py
+python scripts/create_report_notebook.py
+python scripts/update_presentation.py
+```
 
 ## Data Policy
-This public portfolio repo includes representative samples for portability. Large raw source files were intentionally excluded from GitHub.
-
-See `docs/data_sources_and_reproduction.md` for full dataset references.
+Small public reference layers are included in `data/reference/`. Large raw crash CSVs are intentionally excluded from GitHub.

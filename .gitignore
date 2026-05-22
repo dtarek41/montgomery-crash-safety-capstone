@@ -12,6 +12,8 @@ Thumbs.db
 
 # Temp and large intermediates
 tmp/
+output/
+data/raw/
 *.tmp
 *.log
 *.abf

@@ -1,0 +1,7 @@
+*.geojson text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.py text eol=lf
+*.png binary
+*.pptx binary
+*.zip binary
