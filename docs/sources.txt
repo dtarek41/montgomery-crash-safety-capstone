@@ -1,8 +1,2 @@
 https://visionzeronetwork.org/about/what-is-vision-zero/
 https://www.montgomerycountymd.gov/visionzero/FY26WorkPlan.html#
-https://data.montgomerycountymd.gov/Public-Safety/Crash-Reporting-Incidents-Data/bhju-22kf
-https://data.montgomerycountymd.gov/Public-Safety/Crash-Reporting-Drivers-Data/mmzv-x632
-https://data.montgomerycountymd.gov/Public-Safety/Crash-Reporting-Non-Motorists-Data/n7fk-dce5
-https://data.montgomerycountymd.gov/stories/s/Community-Equity-Index/s6xy-n56j/
-https://opendata.maryland.gov/Transportation/Annual-Average-Daily-Traffic-Volume/2997-4217
-https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
