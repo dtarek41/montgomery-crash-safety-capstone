@@ -166,7 +166,25 @@ def is_vru_text(value: object) -> bool:
 
 def is_dui_text(value: object) -> bool:
     text = normalize_text(value).lower()
-    return "alcohol" in text or "drug" in text or "illegal" in text
+    tokens = [token.strip() for token in re.split(r"[,;/]", text) if token.strip()]
+    positive_patterns = (
+        r"\bsuspect of alcohol use\b",
+        r"\bsuspect of drug use\b",
+        r"\balcohol present\b",
+        r"\balcohol contributed\b",
+        r"\billegal drug present\b",
+        r"\billegal drug contributed\b",
+        r"\bcombined substance present\b",
+        r"\bcombination contributed\b",
+    )
+    for token in tokens:
+        if token in {"unknown", "n/a", "none detected"}:
+            continue
+        if "not suspect" in token:
+            continue
+        if any(re.search(pattern, token) for pattern in positive_patterns):
+            return True
+    return False
 
 
 def is_distracted_text(value: object) -> bool:
